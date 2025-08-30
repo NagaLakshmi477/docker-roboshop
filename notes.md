@@ -2,6 +2,8 @@
 
 ROBOSHOP 
 ==========
+MONGODB:
+============
 mongodb --7 version ---> official image from docker hub 
 we will take it from docker hub. So no need to install and start the image
 We need to add some default data regrading catalogue.
@@ -17,13 +19,18 @@ docker run -d --name mongodb mongodb:v1
 here 
 -p ---> is not given bacuse we are not exposed outside
 docker ps ----> mongodb is runnng
---------------------------------------------
+
+CATALOGUE:
+=============
+We can put customised file under /opt/server floder. We will place extra code here
+For catalogue we can directly take node js image 
 docker build -t catalogue:v1 .
 docker images
 docker run -d --name catalogue catalogue:v1
 docker ps
 docker exec -it catalogue bash
 curl http://localhost:8080/health  ---> sucess mesans catalogue runnng fine 
+
 failure:
 =======
 docker logs catalogue
