@@ -99,7 +99,7 @@ curl localhost 8080
 -----------------------
 cart:
 
-docker build -t cart:v1
+docker build -t cart:v1 .
 docker run -d --name cart --network roboshop cart:v1
 docker ps
 docker exec -it cart
