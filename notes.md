@@ -32,17 +32,22 @@ docker exec -it catalogue bash
 curl http://localhost:8080/health  ---> sucess mesans catalogue runnng fine 
 
 failure:
+=========
+ docker is unmable to connect mongodb
+(Instana agent not reachable → no metrics/tracing.
+MongoDB connection error → app cannot connect to its database.)
 =======
 docker logs catalogue
 ifconfig 
-who will provid the internet to vm ---> aws --> this is ethernet port 
+who will provide the internet to vm ---> aws --> this is ethernet port 
 here we are installing docker so docker inetrenally/viruvally created one network ---> this is called docker o ---> This is like mode M.
 whenever we are creating docker container it will allocate the IP 
 docker modem ---> (172.17.0.1)
 docker inspect catalogue ---> It contain one IP (172.17.0.2)
 docker inspect mongodb ---> It contain one IP (172.17.0.3)
 Here those are in same network but unable to connect. Beacause docker uses default network
-docker network docker netrwork ls ---> To see the list of networks
+docker network 
+docker netrwork ls ---> To see the list of networks
 
 there are 2 types of networks:
 bridge network
@@ -77,6 +82,7 @@ here we need to use customized network
 
 -------------------
 redis:
+here we are not doing customised
 here we are installing redis, not filling the data. so we can run directly
 docker run -d --name redis --network roboshop redis:7.
 there is no local image so it can directly pull the image fom hub
