@@ -1,7 +1,8 @@
 FROM maven
 WORKDIR /opt/server
 COPY pom.xml .
-COPY src .
+COPY src /opt/server/src
+
 RUN mvn clean package
 # it will create target floder in this we have jsr files(default)
 #  we will take the file outside
