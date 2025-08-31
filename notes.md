@@ -76,7 +76,7 @@ docker network connect roboshop catalogue
 docker inspect mongodb
 docker inspect catalogue
 docker exec -it catalogue bash
-cutl localhost:8080/health 
+curl localhost:8080/health 
 # now it is connected
 here we need to use customized network
 
@@ -84,7 +84,7 @@ here we need to use customized network
 redis:
 here we are not doing customised
 here we are installing redis, not filling the data. so we can run directly
-docker run -d --name redis --network roboshop redis:7.
+docker run -d --name redis --network roboshop redis:7
 there is no local image so it can directly pull the image fom hub
 docker ps ---It is running
 
@@ -94,7 +94,7 @@ docker build -t  user:v1 .
 docker run -d --name user --network roboshop user:v1
 docker ps
 docker exec -it user
-curl localhost 8080
+curl localhost:8080/health 
 
 -----------------------
 cart:
@@ -103,7 +103,7 @@ docker build -t cart:v1 .
 docker run -d --name cart --network roboshop cart:v1
 docker ps
 docker exec -it cart
-curl localhost 8080
+curl localhost:8080/health 
 
 ---------------------
 mysql:
@@ -131,7 +131,7 @@ docker compose:
 docker login -u lakshmi315
 for all images  run and building:
 ----------------------
-for i in cart catalogue mongodb mysql shipping user ; do cd $i; docker build -t lakshmi315/$i:v1 . ; docker push lakshmi315/$i:v1 ; cd ..; done
+for i in cart catalogue mongodb mysql shipping user ; do cd $i; docker build -t lakshmi1092/$i:v1 . ; docker push lakshmi315/$i:v1 ; cd ..; done
 
 it is a command line tool for  multi container application
 we can define all docker containers as service. 

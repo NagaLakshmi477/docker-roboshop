@@ -2,7 +2,7 @@ networks:
   default:
     driver: bridge
     name: roboshop
-    #external: true
+    external: true
 services:
   mongodb:
     image: lakshmi1092/mongodb:v1
