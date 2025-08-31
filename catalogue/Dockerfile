@@ -10,4 +10,4 @@ ENV MONGO="true"\
 MONGO_URL="mongodb://mongodb:27017/catalogue"
 # here we will use CMD beacuse we need to login and check 
 # we alraedy in /appfloder 
-CMD [ "node" ," server.js"]
+CMD [ "node" ,"server.js"]
