@@ -131,7 +131,7 @@ docker compose:
 docker login -u lakshmi315
 for all images  run and building:
 ----------------------
-for i in cart catalogue mongodb mysql shipping user ; do cd $i; docker build -t lakshmi1092/$i:v1 . ; docker push lakshmi315/$i:v1 ; cd ..; done
+for i in cart catalogue mongodb mysql shipping user ; do cd $i; docker build -t lakshmi1092/$i:v1 . ; docker push lakshmi1092/$i:v1 ; cd ..; done
 
 it is a command line tool for  multi container application
 we can define all docker containers as service. 
