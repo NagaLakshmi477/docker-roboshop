@@ -42,9 +42,9 @@ services:
     environment:
       RABBITMQ_DEFAULT_USER: roboshop
       RABBITMQ_DEFAULT_PASSWORD: roboshop123
-  payments:
-    image: lakshmi1092/payments
-    container_name: payments
+  payment:
+    image: lakshmi1092/payment
+    container_name: payment
     environment:
       CART_HOST: cart
       CART_PORT: 8080
