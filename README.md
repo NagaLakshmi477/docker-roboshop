@@ -109,7 +109,7 @@ curl localhost:8080/health
 ---------------------
 mysql:
 
-docker build -t mysql:v1
+docker build -t mysql:v1 .
 docker run -d --name mysql --network roboshop mysql:v1
 docker ps
 docker exec -it mysql
