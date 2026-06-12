@@ -29,6 +29,7 @@ docker images
 docker run -d --name catalogue catalogue:v1
 docker ps
 docker exec -it catalogue bash
+there is a health check we can do 
 curl http://localhost:8080/health  ---> sucess mesans catalogue runnng fine 
 
 failure:
