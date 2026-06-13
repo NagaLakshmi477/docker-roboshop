@@ -124,12 +124,12 @@ docker exec -it shipping
 curl localhost 8080
 
 -------------------------------next day
-docker login -u lakshmi315
-for i in cart catalogue mongodb mysql shipping user; do cd $i; docker build -t joindevops/$i:v1 . ; docker push lakshmi315/$i ; cd .. ; done    
+docker login -u lakshmi1092
+for i in cart catalogue mongodb mysql shipping user; do cd $i; docker build -t joindevops/$i:v1 . ; docker push lakshmi1092/$i ; cd .. ; done    
 
 docker compose:
 ================
-docker login -u lakshmi315
+docker login -u lakshmi1092
 for all images  run and building:
 ----------------------
 for i in cart catalogue mongodb mysql shipping user ; do cd $i; docker build -t lakshmi1092/$i:v1 . ; docker push lakshmi1092/$i:v1 ; cd ..; done
@@ -164,13 +164,13 @@ docker compose up -d
 ----------------------
 payment:
 
-docker build -t lakshmi315/payment:v1
+docker build -t lakshmi1092/payment:v1
 # we can give environemnt variables on run time or build time
 docker compose up -d 
 
 --------------------
 frontend:
-docker build -t lakshmi315/frontend:v1
+docker build -t lakshmi1092/frontend:v1
 docker compose up -d 
 
 Application : break
@@ -190,7 +190,7 @@ cd /etc/nginx/conf.d
 ls -l
 so we need to remove that 
 git pull
-docker build -t lakshmi315/frontend:v1 --no-cache .
+docker build -t lakshmi1092/frontend:v1 --no-cache .
 docker compose up -d 
 # now cities are not loadig
 docer exec -it mysql:v1 bash
@@ -239,14 +239,14 @@ it will stre the data in given floder
 ===========================================
 Optimization:
 ===================
-docker login -u lakshmi315
+docker login -u lakshmi1092
 cd roboshop-docker
 
 for i in $(ls -d */);
 do cd $i;
 name=$(basename "$i);
-docker build -i lakshmi315/$name:v1 . ;
-docker push lakshmi315/$name 
+docker build -i lakshmi1092/$name:v1 . ;
+docker push lakshmi1092/$name 
 
 this is build image and push images
 base name means it removes the / in names it gives  only names
