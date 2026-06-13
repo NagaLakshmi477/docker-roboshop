@@ -57,5 +57,15 @@ services:
       - cart
       - user
       - rabbitmq
-      
+  frontend:
+    image: lakshmi1092/frontend:v1
+    container_name: frontend
+    ports:
+      - "80:80" # localport:conatinerport 
+    depends_on:
+      - catalogue
+      - cart
+      - shipping
+      - user
+      - payment     
       
