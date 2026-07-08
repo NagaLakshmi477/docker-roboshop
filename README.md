@@ -637,8 +637,21 @@ Docker Compose is a **command-line tool** used to manage **multi-container appli
 here catalogue depends on momgodb
 cart depends on catalogue 
 
-here we we run cart without catalogue and db the applications is not run. and we need to remebers the flow which we need to run 1st
-so instead of we have docker compose
+## Why Docker Compose?
+
+In a multi-container application, services depend on each other.
+
+For example:
+
+- Cart depends on Catalogue.
+- Catalogue depends on MongoDB.
+- Shipping depends on MySQL.
+
+If we start the **Cart** service without starting **Catalogue** and **MongoDB**, the application will not work properly.
+
+Without Docker Compose, we need to remember the order in which services should be started and run each container manually.
+
+To avoid this, we use **Docker Compose**, which manages all the services together.
 
 
 what is our run command:
