@@ -208,12 +208,15 @@ one sql file is created the table and insrted the data. another file droping the
 recreadted but does,'t insert the data . se we lost the data in db
 this happened in dev environement but it becaome a big issue and escalated
 
+container are ephemeral by deafult if you remove them it will remove data by default
+
 to down-----> docker compose down
 so here if we done the docer is that previous user is presentn or not present
 no it is not present beacuse contanser are phemeral by default if we removethem they will remove entrie data by default
 # now we need to optizise the decrasing image size and storing data in temporary
 solution:
 docker volumns
+---------------
 cd ..
 docker run -d -p 8080:80 nginx
 docker exec -it <id> bas    h
@@ -232,9 +235,6 @@ mkdir nginx
 
 docker run -d - 8080:80 -v /home/ec2-user/nginx-data:/usr/nginx/html nginx
 it will stre the data in given floder
-
-
-
 
 ===========================================
 Optimization:
