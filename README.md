@@ -231,6 +231,8 @@ Both containers are in the **same Docker network**, but they are still unable to
 
 ---
 
+The default bridge network allocates IP addresses to containers, but it does not automatically map container names to those IP addresses.
+
 ## Docker Network Commands
 
 To view Docker networks:
