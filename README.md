@@ -365,47 +365,196 @@ If the health check is successful, the Catalogue container is able to communicat
 
 > **Note:** Here we are using a **custom bridge network** (`roboshop`) so that containers can communicate using their container names.
 
--------------------
-redis:
-here we are not doing customised
-here we are installing redis, not filling the data. so we can run directly
+# Redis
+
+## Overview
+
+- Here we are **not creating a custom image**.
+- We are only running the Redis server; no default data needs to be loaded.
+- Therefore, we can directly use the official Redis image from Docker Hub.
+
+---
+
+## Run Redis Container
+
+```bash
 docker run -d --name redis --network roboshop redis:7
-there is no local image so it can directly pull the image fom hub
-docker ps ---It is running
+```
 
---------------------
-user:
-docker build -t  user:v1 .
+> **Note:** If the Redis image is not available locally, Docker automatically pulls it from Docker Hub.
+
+---
+
+## Verify the Container
+
+```bash
+docker ps
+```
+
+The Redis container should be in the **running** state.
+
+---
+
+# User
+
+## Build Docker Image
+
+```bash
+docker build -t user:v1 .
+```
+
+---
+
+## Run User Container
+
+```bash
 docker run -d --name user --network roboshop user:v1
+```
+
+---
+
+## Verify the Container
+
+```bash
 docker ps
-docker exec -it user
-curl localhost:8080/health 
+```
 
------------------------
-cart:
+---
 
+## Access the Container
+
+```bash
+docker exec -it user bash
+```
+
+---
+
+## Health Check
+
+```bash
+curl localhost:8080/health
+```
+
+---
+
+# Cart
+
+## Build Docker Image
+
+```bash
 docker build -t cart:v1 .
+```
+
+---
+
+## Run Cart Container
+
+```bash
 docker run -d --name cart --network roboshop cart:v1
+```
+
+---
+
+## Verify the Container
+
+```bash
 docker ps
-docker exec -it cart
-curl localhost:8080/health 
+```
 
----------------------
-mysql:
+---
 
+## Access the Container
+
+```bash
+docker exec -it cart bash
+```
+
+---
+
+## Health Check
+
+```bash
+curl localhost:8080/health
+```
+
+---
+
+# MySQL
+
+## Build Docker Image
+
+```bash
 docker build -t mysql:v1 .
+```
+
+---
+
+## Run MySQL Container
+
+```bash
 docker run -d --name mysql --network roboshop mysql:v1
+```
+
+---
+
+## Verify the Container
+
+```bash
 docker ps
-docker exec -it mysql
+```
 
------------------
-shipping:
+---
 
-docker build -t shipping:v1
+## Access the Container
+
+```bash
+docker exec -it mysql bash
+```
+
+---
+
+# Shipping
+
+## Build Docker Image
+
+```bash
+docker build -t shipping:v1 .
+```
+
+> **Note:** Don't forget the `.` at the end of the `docker build` command.
+
+---
+
+## Run Shipping Container
+
+```bash
 docker run -d --name shipping --network roboshop shipping:v1
+```
+
+---
+
+## Verify the Container
+
+```bash
 docker ps
-docker exec -it shipping
-curl localhost 8080
+```
+
+---
+
+## Access the Container
+
+```bash
+docker exec -it shipping bash
+```
+
+---
+
+## Health Check
+
+```bash
+curl localhost:8080
+```
+
 
 -------------------------------next day
 docker login -u lakshmi1092
