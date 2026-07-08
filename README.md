@@ -281,19 +281,89 @@ This command displays the list of available Docker networks.
 
 
 
-docker network create roboshop ----> to crate network
-before connectining we need to disconnect from bridge:
+# Create a Custom Bridge Network
+
+Create a custom Docker network:
+
+```bash
+docker network create roboshop
+```
+
+---
+
+## Disconnect Containers from the Default Bridge Network
+
+Before connecting the containers to the custom network, disconnect them from the default **bridge** network.
+
+```bash
 docker network disconnect bridge catalogue
+```
+
+```bash
 docker network disconnect bridge mongodb
+```
+
+---
+
+## List Docker Networks
+
+```bash
 docker network ls
+```
+
+---
+
+## Connect Containers to the Custom Network
+
+Connect the MongoDB container:
+
+```bash
 docker network connect roboshop mongodb
+```
+
+Connect the Catalogue container:
+
+```bash
 docker network connect roboshop catalogue
+```
+
+---
+
+## Verify the Network Configuration
+
+Check the MongoDB container:
+
+```bash
 docker inspect mongodb
+```
+
+Check the Catalogue container:
+
+```bash
 docker inspect catalogue
+```
+
+Verify that both containers are connected to the **roboshop** network.
+
+---
+
+## Verify the Application
+
+Access the Catalogue container:
+
+```bash
 docker exec -it catalogue bash
-curl localhost:8080/health 
-# now it is connected
-here we need to use customized network
+```
+
+Run the health check:
+
+```bash
+curl localhost:8080/health
+```
+
+If the health check is successful, the Catalogue container is able to communicate with the MongoDB container.
+
+> **Note:** Here we are using a **custom bridge network** (`roboshop`) so that containers can communicate using their container names.
 
 -------------------
 redis:
