@@ -1,24 +1,122 @@
-# roboshop-docker
+# Roboshop Docker
 
-ROBOSHOP 
-==========
-MONGODB: 
-============
-mongodb --7 version ---> official image from docker hub 
-we will take it from docker hub. So no need to install and start the image
-We need to add some default data regrading catalogue.
-initializing a fresh instance:
-There is default location
-when a container is started 1st time it will execute files with .sh and .js that found in the location 
-/docker/entrypoint-initdb.d 
-files will be executed in alphabatical order
-start,stop,and data loading ---> all will come from image
+# MongoDB
+
+## Overview
+
+- We are using **MongoDB 7** official image from Docker Hub.
+- Since it is an official image, there is **no need to install or manually start MongoDB** inside the container.
+- The image already contains everything required to run the MongoDB server.
+
+---
+
+## Requirement
+
+The **Catalogue** service requires some default data in MongoDB.
+
+To load this data automatically, we use MongoDB's initialization feature.
+
+---
+
+## MongoDB Initialization
+
+When a MongoDB container starts **for the first time**, it checks the following directory:
+
+```text
+/docker-entrypoint-initdb.d
+```
+
+If this directory contains any:
+
+- `.sh` files
+- `.js` files
+
+MongoDB automatically executes them.
+
+### Notes
+
+- These files run **only during the first container startup**.
+- Files are executed in **alphabetical order**.
+- This is the recommended way to create databases, collections, users, and load initial data.
+
+---
+
+## Build Docker Image
+
+```bash
 docker build -t mongodb:v1 .
+```
+
+---
+
+## List Images
+
+```bash
 docker images
+```
+
+---
+
+## Run MongoDB Container
+
+```bash
 docker run -d --name mongodb mongodb:v1
-here 
--p ---> is not given bacuse we are not exposed outside
-docker ps ----> mongodb is runnng
+```
+
+### Options Used
+
+- `-d` → Run the container in detached mode (background).
+- `--name mongodb` → Assign the container name as **mongodb**.
+
+> **Note:** We did **not** use the `-p` option because MongoDB is used only by other Docker containers inside the Docker network. It does not need to be exposed to the outside host.
+
+---
+
+## Verify Running Containers
+
+```bash
+docker ps
+```
+
+Example Output:
+
+```text
+CONTAINER ID   IMAGE         NAME
+xxxxxxxxxxxx   mongodb:v1    mongodb
+```
+
+This confirms that the MongoDB container is running successfully.
+
+---
+
+## Summary
+
+- Use the official MongoDB 7 image.
+- Load default Catalogue data using initialization scripts.
+- Place `.sh` or `.js` files inside:
+
+```text
+/docker-entrypoint-initdb.d
+```
+
+- Scripts execute automatically only during the first container startup.
+- Build the image:
+
+```bash
+docker build -t mongodb:v1 .
+```
+
+- Run the container:
+
+```bash
+docker run -d --name mongodb mongodb:v1
+```
+
+- Verify:
+
+```bash
+docker ps
+```
 
 CATALOGUE:
 =============
