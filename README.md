@@ -89,47 +89,80 @@ This confirms that the MongoDB container is running successfully.
 
 ---
 
-## Summary
 
-- Use the official MongoDB 7 image.
-- Load default Catalogue data using initialization scripts.
-- Place `.sh` or `.js` files inside:
+# Catalogue
 
-```text
-/docker-entrypoint-initdb.d
-```
+## Overview
 
-- Scripts execute automatically only during the first container startup.
-- Build the image:
+- For the **Catalogue** service, we use the official **Node.js** image as the base image.
+- We can place our customized application files under the `/opt/server` folder inside the container.
+- This folder is used to store the Catalogue application code.
 
-```bash
-docker build -t mongodb:v1 .
-```
+---
 
-- Run the container:
+## Build Docker Image
 
 ```bash
-docker run -d --name mongodb mongodb:v1
-```
-
-- Verify:
-
-```bash
-docker ps
-```
-
-CATALOGUE:
-=============
-We can put customised file under /opt/server floder. We will place extra code here
-For catalogue we can directly take node js image 
 docker build -t catalogue:v1 .
-docker images
-docker run -d --name catalogue catalogue:v1
-docker ps
-docker exec -it catalogue bash
-there is a health check we can do 
-curl http://localhost:8080/health  ---> sucess mesans catalogue runnng fine 
+```
 
+---
+
+## List Images
+
+```bash
+docker images
+```
+
+---
+
+## Run Catalogue Container
+
+```bash
+docker run -d --name catalogue catalogue:v1
+```
+
+### Options Used
+
+- `-d` → Run the container in detached mode (background).
+- `--name catalogue` → Assign the container name as **catalogue**.
+
+---
+
+## Verify Running Containers
+
+```bash
+docker ps
+```
+
+This confirms that the Catalogue container is running.
+
+---
+
+## Access the Container
+
+```bash
+docker exec -it catalogue bash
+```
+
+### Options Used
+
+- `docker exec` → Execute a command inside a running container.
+- `-i` → Keep STDIN open (interactive mode).
+- `-t` → Allocate a terminal.
+- `bash` → Open a Bash shell inside the container.
+
+---
+
+## Health Check
+
+To verify that the Catalogue service is running properly:
+
+```bash
+curl http://localhost:8080/health
+```
+
+If the service is running successfully, you should receive a successful response, which indicates that the Catalogue application is healthy.
 failure:
 =========
  docker is unmable to connect mongodb
