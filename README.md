@@ -554,25 +554,85 @@ docker exec -it shipping bash
 ```bash
 curl localhost:8080
 ```
+# Push Docker Images to Docker Hub
 
+## Login to Docker Hub
 
--------------------------------next day
+```bash
 docker login -u lakshmi1092
-for i in cart catalogue mongodb mysql shipping user; do cd $i; docker build -t joindevops/$i:v1 . ; docker push lakshmi1092/$i ; cd .. ; done    
+```
 
-docker compose:
-================
+After running the command, enter your Docker Hub password when prompted.
+
+---
+
+## Build and Push Images
+
+```bash
+for i in cart catalogue mongodb mysql shipping user
+do
+    cd $i
+    docker build -t lakshmi1092/$i:v1 .
+    docker push lakshmi1092/$i:v1
+    cd ..
+done
+```
+
+### Explanation
+
+- `for i in ...` → Loops through each application directory.
+- `cd $i` → Moves into the application's directory.
+- `docker build -t lakshmi1092/$i:v1 .` → Builds the Docker image and tags it.
+- `docker push lakshmi1092/$i:v1` → Pushes the image to your Docker Hub repository.
+- `cd ..` → Returns to the parent directory and continues with the next application.
+
+--- 
+
+# Docker Compose
+
+Before using Docker Compose, build and push all application images to Docker Hub.
+
+---
+
+## Login to Docker Hub
+
+```bash
 docker login -u lakshmi1092
-for all images  run and building:
-----------------------
-for i in cart catalogue mongodb mysql shipping user ; do cd $i; docker build -t lakshmi1092/$i:v1 . ; docker push lakshmi1092/$i:v1 ; cd ..; done
+```
 
-it is a command line tool for  multi container application
-we can define all docker containers as service. 
-create dependies b/w them start them at onces and stop them at onces 
-- start and stop, rubuild the services 
-- view the status of running services
-- stream the log output of running services
+Enter your Docker Hub password when prompted.
+
+---
+
+## Build and Push All Images
+
+```bash
+for i in cart catalogue mongodb mysql shipping user
+do
+    cd $i
+    docker build -t lakshmi1092/$i:v1 .
+    docker push lakshmi1092/$i:v1
+    cd ..
+done
+```
+
+> **Note:** After all images are available in Docker Hub, Docker Compose can pull these images and start all the services together using a single `docker-compose.yml` or `compose.yaml` file.
+
+# Docker Compose
+
+Docker Compose is a **command-line tool** used to manage **multi-container applications**.
+
+---
+
+## Features
+
+- We can define all Docker containers as **services** in a single Compose file.
+- We can create dependencies between services.
+- Start all services at once.
+- Stop all services at once.
+- Rebuild services when changes are made.
+- View the status of running services.
+- Stream the log output of running services.
 
 here catalogue depends on momgodb
 cart depends on catalogue 
