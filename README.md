@@ -165,23 +165,81 @@ curl http://localhost:8080/health
 If the service is running successfully, you should receive a successful response, which indicates that the Catalogue application is healthy.
 
 
-failure:
-=========
- docker is unmable to connect mongodb
-(Instana agent not reachable → no metrics/tracing.
-MongoDB connection error → app cannot connect to its database.)
-=======
+# Failure
+
+Docker is unable to connect to MongoDB.
+
+Possible errors:
+
+- **Instana agent not reachable** → No metrics/tracing.
+- **MongoDB connection error** → Application cannot connect to its database.
+
+---
+
+## Check Container Logs
+
+```bash
 docker logs catalogue
-ifconfig 
-who will provide the internet to vm ---> aws --> this is ethernet port 
-here we are installing docker so docker inetrenally/viruvally created one network ---> this is called docker o ---> This is like mode M.
-whenever we are creating docker container it will allocate the IP 
-docker modem ---> (172.17.0.1)
-docker inspect catalogue ---> It contain one IP (172.17.0.2)
-docker inspect mongodb ---> It contain one IP (172.17.0.3)
-Here those are in same network but unable to connect. Beacause docker uses default network
-docker network 
-docker netrwork ls ---> To see the list of networks
+```
+
+---
+
+## Check Network Interfaces
+
+```bash
+ifconfig
+```
+
+### Note
+
+- Who provides the internet to the VM?
+  - **AWS** provides the internet through the **Ethernet interface**.
+- When Docker is installed, it internally (virtually) creates one network.
+- This network is called **docker0** (Docker Bridge Network).
+
+---
+
+## Docker Bridge Network
+
+Whenever we create a Docker container, Docker automatically allocates an IP address.
+
+Example:
+
+```text
+docker0 (Gateway)      : 172.17.0.1
+Catalogue Container    : 172.17.0.2
+MongoDB Container      : 172.17.0.3
+```
+
+To check the Catalogue container IP:
+
+```bash
+docker inspect catalogue
+```
+
+To check the MongoDB container IP:
+
+```bash
+docker inspect mongodb
+```
+
+---
+
+## Problem
+
+Both containers are in the **same Docker network**, but they are still unable to communicate because Docker is using the **default bridge network**.
+
+---
+
+## Docker Network Commands
+
+To view Docker networks:
+
+```bash
+docker network ls
+```
+
+This command displays the list of available Docker networks.
 
 there are 2 types of networks:
 bridge network
