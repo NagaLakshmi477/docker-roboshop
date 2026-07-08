@@ -237,27 +237,48 @@ The default bridge network allocates IP addresses to containers, but it does not
 
 To view Docker networks:
 
+## Docker Networks
+
+To list all Docker networks:
+
 ```bash
 docker network ls
 ```
 
 This command displays the list of available Docker networks.
 
-there are 2 types of networks:
-bridge network
-host network
-Docker by default bridge network 
-ex: docker 0 is the bridge that allocates Ip to components --> called bridge
-host network:
-modem gives the IP to the components. It will directly connected with host network
-by deafult docker created bridge network whenever you installed docker inside any server
-we can create sepaarte network beacuse both componets are not connected by default
+---
 
+## Types of Docker Networks
 
-host means directly host network.
-bridge means docker create separate network interface and assign the IP address to conatiners.
-docker default network can't comminucate between conatainers
-docker always suggest to create custom bridge network
+### Bridge Network
+
+- Docker creates a **bridge network** by default.
+- Whenever Docker is installed on a server, it automatically creates a bridge called **docker0**.
+- `docker0` is the bridge that allocates IP addresses to Docker containers.
+- Docker creates a separate virtual network interface and assigns IP addresses to containers.
+
+> Bridge network means Docker creates a separate virtual network and assigns IP addresses to containers.
+
+---
+
+### Host Network
+
+- In the **host network**, the container directly uses the host machine's network.
+- The host machine provides the network connectivity to the container.
+- The container does not get a separate Docker bridge network IP.
+
+> Host network means the container is directly connected to the host network.
+
+---
+
+## Why Create a Custom Bridge Network?
+
+- By default, Docker creates the **bridge network** whenever Docker is installed.
+- We create a separate (custom) bridge network because the **default bridge network does not automatically resolve container names**.
+- Containers on the default bridge network can communicate using **IP addresses**, but not automatically using **container names**.
+- Docker always recommends creating a **custom bridge network** so containers can communicate using container names (DNS).
+
 
 
 docker network create roboshop ----> to crate network
