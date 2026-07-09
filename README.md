@@ -948,51 +948,233 @@ When a container is deleted, its filesystem and data are also deleted.
 To avoid losing data, we need to store it **outside the container** using **Docker Volumes (persistent storage)** instead of storing it only inside the container's filesystem.
 
 
-solution:
-docker volumns
----------------
-cd ..
+# Docker Volumes
+
+## Why Do We Need Volumes?
+
+By default, containers are **ephemeral**.
+
+If a container is removed, all the data stored inside the container is also removed.
+
+To persist data even after the container is deleted, we use **Docker Volumes (or bind mounts).**
+
+---
+
+## Example Without a Volume
+
+Run an Nginx container:
+
+```bash
 docker run -d -p 8080:80 nginx
-docker exec -it <id> bas    h
-we can write one html file for testing
-cd /usr/share/nginx/html/
+```
+
+Login to the container:
+
+```bash
+docker exec -it <container_id> bash
+```
+
+Go to the HTML directory:
+
+```bash
+cd /usr/share/nginx/html
+```
+
+Create a test file:
+
+```bash
 echo "hello" > hello.html
+```
+
+Exit the container:
+
+```bash
 exit
-docker rm -f <id> ----remove and run gain we will see the data is present or not
-where the data is present:
+```
+
+Remove the container:
+
+```bash
+docker rm -f <container_id>
+```
+
+If you create a new Nginx container again, the `hello.html` file will **not** be present because the previous container was deleted.
+
+---
+
+## Where is the Data Stored?
+
+Become the root user:
+
+```bash
 sudo su -
-docker insepect <id>
-it creates random dir and stroe the data into them
-cd /merged/usr/share/nginx/html/
------volums---------
-mkdir nginx
+```
 
-docker run -d - 8080:80 -v /home/ec2-user/nginx-data:/usr/nginx/html nginx
-it will stre the data in given floder
+Inspect the container:
 
-===========================================
-Optimization:
-===================
+```bash
+docker inspect <container_id>
+```
+
+Docker creates a storage directory on the host and stores the container's filesystem there.
+
+Example:
+
+```text
+/var/lib/docker/overlay2/...
+```
+
+The merged filesystem is available under a path similar to:
+
+```text
+.../merged/usr/share/nginx/html/
+```
+
+> **Note:** Docker manages these directories automatically. They should not be modified manually.
+
+---
+
+# Using a Volume (Bind Mount)
+
+Create a directory on the host machine:
+
+```bash
+mkdir nginx-data
+```
+
+Run the Nginx container with a bind mount:
+
+```bash
+docker run -d -p 8080:80 \
+-v /home/ec2-user/nginx-data:/usr/share/nginx/html \
+nginx
+```
+
+### Explanation
+
+- `/home/ec2-user/nginx-data` → Directory on the host machine.
+- `/usr/share/nginx/html` → Directory inside the container.
+
+Any files created inside `/usr/share/nginx/html` are stored in the host directory `/home/ec2-user/nginx-data`.
+
+Even if the container is removed, the data remains on the host.
+
+> **Note:** This example uses a **bind mount**, where a host directory is mapped to a directory inside the container. Docker also supports **named volumes** for persistent storage.
+# Image Optimization
+
+## Build and Push All Images
+
+Login to Docker Hub:
+
+```bash
 docker login -u lakshmi1092
+```
+
+Go to the project directory:
+
+```bash
 cd roboshop-docker
+```
 
-for i in $(ls -d */);
-do cd $i;
-name=$(basename "$i);
-docker build -i lakshmi1092/$name:v1 . ;
-docker push lakshmi1092/$name 
+Build and push all images:
 
-this is build image and push images
-base name means it removes the / in names it gives  only names
+```bash
+for i in $(ls -d */)
+do
+    cd "$i"
+    name=$(basename "$i")
+    docker build -t lakshmi1092/$name:v1 .
+    docker push lakshmi1092/$name:v1
+    cd ..
+done
+```
 
-1. use minimal official images
-catalogue --> FROM node:20-alphine3.21
+### Explanation
 
--v host-dir:container-dir
-/usr/share/nginx/html ----> nginx html dir
+- `ls -d */` → Lists all directories.
+- `cd "$i"` → Moves into each application directory.
+- `basename "$i"` → Removes the trailing `/` and returns only the directory name.
+- `docker build -t lakshmi1092/$name:v1 .` → Builds the Docker image.
+- `docker push lakshmi1092/$name:v1` → Pushes the image to Docker Hub.
+- `cd ..` → Returns to the parent directory.
 
-un-named/un-manged volumes:
-===============================
-it we create dir and manage it then those are called un-named/un-manged volumes
-if docker creates and dir and manag then those are called named/ managed volumes
+---
 
+## Image Optimization Techniques
+
+### 1. Use Minimal Official Images
+
+Use lightweight base images whenever possible to reduce the image size.
+
+Example:
+
+```dockerfile
+FROM node:20-alpine3.21
+```
+
+Using Alpine-based images:
+
+- Reduces image size.
+- Improves image download and upload speed.
+- Reduces storage usage.
+
+---
+
+## Bind Mount Syntax
+
+```text
+-v <host-directory>:<container-directory>
+```
+
+Example:
+
+```bash
+-v /home/ec2-user/nginx-data:/usr/share/nginx/html
+```
+
+- **Host Directory:** `/home/ec2-user/nginx-data`
+- **Container Directory:** `/usr/share/nginx/html` (Nginx HTML directory)
+  
+
+# Docker Volumes
+
+## Unnamed (Unmanaged) Volumes / Bind Mounts
+
+- If **we create and manage the directory** on the host machine, it is called an **unnamed (unmanaged) volume** (commonly known as a **bind mount**).
+- We are responsible for creating, managing, backing up, and deleting the directory.
+
+**Example:**
+
+```bash
+docker run -d -p 8080:80 \
+-v /home/ec2-user/nginx-data:/usr/share/nginx/html \
+nginx
+```
+
+Here:
+
+- `/home/ec2-user/nginx-data` → Created and managed by the user.
+- `/usr/share/nginx/html` → Directory inside the container.
+
+---
+
+## Named (Managed) Volumes
+
+- If **Docker creates and manages the storage**, it is called a **named (managed) volume**.
+- Docker automatically creates the volume and stores the data.
+- Docker manages the location of the volume on the host.
+
+**Example:**
+
+```bash
+docker volume create nginx-data
+
+docker run -d -p 8080:80 \
+-v nginx-data:/usr/share/nginx/html \
+nginx
+```
+
+Here:
+
+- `nginx-data` → Docker-managed volume.
+- `/usr/share/nginx/html` → Directory inside the container.
