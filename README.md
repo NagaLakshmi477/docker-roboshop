@@ -654,30 +654,93 @@ Without Docker Compose, we need to remember the order in which services should b
 To avoid this, we use **Docker Compose**, which manages all the services together.
 
 
-what is our run command:
------------------------
-docker run -d --name mongodb --network roboshop joindevops/mongodb:v1
+## Docker Compose Commands
 
-docker compose up -d 
+### Running a Single Container
 
--d ---> sending to background
+Without Docker Compose, we start each container individually.
 
-docker ps 
+Example:
 
-when ever we chang the files we need again run 
-docker compose up -d 
+```bash
+docker run -d --name mongodb --network roboshop lakshmi1092/mongodb:v1
+```
 
-----------------------
-payment:
+---
 
-docker build -t lakshmi1092/payment:v1
-# we can give environemnt variables on run time or build time
-docker compose up -d 
+### Running All Services
 
---------------------
-frontend:
-docker build -t lakshmi1092/frontend:v1
-docker compose up -d 
+With Docker Compose, all services can be started using a single command:
+
+```bash
+docker compose up -d
+```
+
+**Options Used:**
+
+- `-d` → Runs all services in detached mode (background).
+
+---
+
+## Verify Running Services
+
+```bash
+docker ps
+```
+
+This command displays all running containers.
+
+---
+
+## Recreate Services
+
+Whenever we make changes to the application files or the Compose configuration, run:
+
+```bash
+docker compose up -d
+```
+
+Docker Compose recreates the services if required and applies the latest changes.
+
+# Payment
+
+## Build Docker Image
+
+```bash
+docker build -t lakshmi1092/payment:v1 .
+```
+
+> **Note:** Environment variables can be provided either at **build time** or **run time**, depending on the application requirement.
+
+---
+
+## Start the Services
+
+```bash
+docker compose up -d
+```
+
+This command starts (or recreates) the services using the latest configuration.
+
+---
+
+# Frontend
+
+## Build Docker Image
+
+```bash
+docker build -t lakshmi1092/frontend:v1 .
+```
+
+---
+
+## Start the Services
+
+```bash
+docker compose up -d
+```
+
+This command starts (or recreates) the services using the latest configuration.
 
 Application : break
 ======================
