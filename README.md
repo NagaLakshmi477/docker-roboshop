@@ -742,47 +742,212 @@ docker compose up -d
 
 This command starts (or recreates) the services using the latest configuration.
 
-Application : break
-======================
-login into frontend:
+# Application Troubleshooting
+
+## Issue 1: Categories Not Loading
+
+### Login to the Frontend Container
+
+```bash
 docker exec -it frontend bash
+```
+
+Go to the Nginx HTML directory:
+
+```bash
 cd /usr/share/nginx/html
+```
+
+List the files:
+
+```bash
 ls -l
-changes in docker file:
-ADD static  /usr/share/nginx/html/
-still same issues:
-catagories no loaded
-cd /etc/nginx/
+```
+
+---
+
+## Update the Dockerfile
+
+Copy the static files into the Nginx HTML directory.
+
+```dockerfile
+ADD static /usr/share/nginx/html/
+```
+
+Rebuild the image after updating the Dockerfile.
+
+---
+
+## Still Facing the Issue?
+
+Check the Nginx configuration.
+
+Go to the Nginx configuration directory:
+
+```bash
+cd /etc/nginx
+```
+
+List the files:
+
+```bash
 ls -l
-# there is a file conf.d this may over the nginx.conf data
+```
+
+There is a directory named **conf.d**.
+
+Go inside it:
+
+```bash
 cd /etc/nginx/conf.d
+```
+
+List the files:
+
+```bash
 ls -l
-so we need to remove that 
+```
+
+> **Note:** The configuration files inside `conf.d` may override the settings in `nginx.conf`. Remove the unnecessary configuration if required.
+
+---
+
+## Rebuild the Frontend Image
+
+Pull the latest changes:
+
+```bash
 git pull
+```
+
+Build the image without using the cache:
+
+```bash
 docker build -t lakshmi1092/frontend:v1 --no-cache .
-docker compose up -d 
-# now cities are not loadig
-docer exec -it mysql:v1 bash
+```
+
+Start the services again:
+
+```bash
+docker compose up -d
+```
+
+---
+
+# Issue 2: Cities Data Not Loading
+
+Login to the MySQL container:
+
+```bash
+docker exec -it mysql bash
+```
+
+Login to MySQL:
+
+```bash
 mysql -u root -pRoboShop@1
-show databases
-use citites
-show tables
-select count(*) from cities
-# here in the scrpit it is creatinga nd updatng data gain it droping and creating
-delete schema file
-we can tell in inteview:
-========================
-devlopers provides the .sql files if there are any changes in db strcuture , by mistakley 2 develpoers created same sql filewith differnt names
-one sql file is created the table and insrted the data. another file droping the table 
-recreadted but does,'t insert the data . se we lost the data in db
-this happened in dev environement but it becaome a big issue and escalated
+```
 
-container are ephemeral by deafult if you remove them it will remove data by default
+Show all databases:
 
-to down-----> docker compose down
-so here if we done the docer is that previous user is presentn or not present
-no it is not present beacuse contanser are phemeral by default if we removethem they will remove entrie data by default
-# now we need to optizise the decrasing image size and storing data in temporary
+```sql
+show databases;
+```
+
+Select the **cities** database:
+
+```sql
+use cities;
+```
+
+Show the tables:
+
+```sql
+show tables;
+```
+
+Check whether the data is available:
+
+```sql
+select count(*) from cities;
+```
+
+---
+
+## Root Cause
+
+The initialization script is executed again, which drops and recreates the schema every time.
+
+As a result, the existing data is deleted and recreated.
+
+### Solution
+
+Delete the unnecessary schema file and rebuild the MySQL image.
+
+# Interview Scenario
+
+If asked in an interview about a real-world database issue, you can explain it like this:
+
+- Developers provide the `.sql` files to create the database schema and load initial data.
+- During development, if there are changes to the database structure, developers update these SQL scripts.
+- By mistake, two developers created different SQL files for the same database.
+- One SQL file:
+  - Created the table.
+  - Inserted the required data.
+- Another SQL file:
+  - Dropped the table.
+  - Recreated the table.
+  - Did **not** insert the data again.
+- As a result, all the data was lost.
+- This happened in the **development environment**, but it became a major issue and was escalated because the application was unable to retrieve the required data.
+
+---
+
+# Containers are Ephemeral
+
+By default, Docker containers are **ephemeral**.
+
+This means:
+
+- If a container is removed, all the data stored inside the container is also removed.
+
+---
+
+## Stop and Remove Containers
+
+```bash
+docker compose down
+```
+
+This command stops and removes all the containers created by Docker Compose.
+
+---
+
+## What Happens to the Data?
+
+Suppose a user is already registered in the application.
+
+After running:
+
+```bash
+docker compose down
+```
+
+and starting the application again,
+
+the previous user's data is **not available** if it was stored only inside the container.
+
+This is because containers are **ephemeral** by default.
+
+When a container is deleted, its filesystem and data are also deleted.
+
+---
+
+## Next Step
+
+To avoid losing data, we need to store it **outside the container** using **Docker Volumes (persistent storage)** instead of storing it only inside the container's filesystem.
+
+
 solution:
 docker volumns
 ---------------
